@@ -1,57 +1,154 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Just Dance Universe Controller</title>
     <style>
-        /* Just Dance Dark Neon Aesthetic */
-        body { background: radial-gradient(circle, #20003b 0%, #050010 100%); color: white; text-align: center; font-family: 'Arial Black', sans-serif; padding: 40px 20px; margin: 0; overflow-x: hidden; }
-        h1 { font-size: 28px; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px #ff0077, 0 0 20px #ff0077; margin-bottom: 30px; }
-        .card { background: rgba(255, 255, 255, 0.05); border: 3px solid #00f0ff; border-radius: 20px; padding: 25px; box-shadow: 0 0 15px rgba(0, 240, 255, 0.3); max-width: 350px; margin: 0 auto; }
-        input { width: 80%; padding: 12px; font-size: 18px; border-radius: 10px; border: 2px solid #ff0077; background: #111; color: white; text-align: center; margin-bottom: 20px; font-family: Arial, sans-serif; }
-        .avatar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 25px; }
-        .avatar { width: 70px; height: 70px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: 0.2s; background: #222; }
-        .avatar.selected { border-color: #00f0ff; box-shadow: 0 0 15px #00f0ff; transform: scale(1.1); }
-        button { padding: 18px 35px; font-size: 20px; background: linear-gradient(45deg, #ff0077, #ff00ff); color: white; border: none; border-radius: 50px; font-weight: bold; box-shadow: 0 4px 20px rgba(255,0,119,0.5); cursor: pointer; text-transform: uppercase; width: 85%; }
-        button:active { transform: scale(0.98); }
+        /* Just Dance Universe Cohesive Aesthetic */
+        body { 
+            background: radial-gradient(circle at center, #110e30 0%, #030114 100%); 
+            color: #ffffff; 
+            text-align: center; 
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            padding: 40px 20px; 
+            margin: 0; 
+            overflow: hidden;
+            user-select: none;
+        }
+        
+        h1 { 
+            font-size: 24px; 
+            font-weight: 900;
+            text-transform: uppercase; 
+            letter-spacing: 3px; 
+            color: #fff;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.6), 0 0 20px rgba(0, 240, 255, 0.3); 
+            margin-bottom: 30px; 
+        }
+
+        /* Glassmorphism Panel Container */
+        .card { 
+            background: rgba(255, 255, 255, 0.03); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 24px; 
+            padding: 30px 20px; 
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); 
+            max-width: 340px; 
+            margin: 0 auto; 
+        }
+
+        input { 
+            width: 85%; 
+            padding: 14px; 
+            font-size: 16px; 
+            border-radius: 14px; 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            background: rgba(0, 0, 0, 0.4); 
+            color: #fff; 
+            text-align: center; 
+            margin-bottom: 25px; 
+            font-weight: 600;
+            outline: none;
+            transition: 0.2s;
+        }
+        input:focus {
+            border-color: #00f0ff;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+        }
+
+        /* Profile Selection Blocks */
+        .avatar-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 15px; 
+            margin-bottom: 30px; 
+            justify-items: center;
+        }
+        .avatar { 
+            width: 65px; 
+            height: 65px; 
+            border-radius: 18px; 
+            border: 2px solid transparent; 
+            cursor: pointer; 
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+            opacity: 0.6;
+        }
+        .avatar.selected { 
+            border-color: #ffffff; 
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4); 
+            transform: scale(1.08); 
+            opacity: 1;
+        }
+
+        /* Sleek Button Layout */
+        button { 
+            padding: 16px 40px; 
+            font-size: 18px; 
+            background: #ffffff; 
+            color: #030114; 
+            border: none; 
+            border-radius: 50px; 
+            font-weight: 800; 
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2); 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            width: 90%; 
+            transition: 0.2s;
+        }
+        button:active { transform: scale(0.96); }
+
         #gameScreen { display: none; }
-        #status { font-size: 16px; margin-top: 20px; color: #00f0ff; text-transform: uppercase; }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            background: rgba(255, 0, 119, 0.2);
+            color: #ff0077;
+            letter-spacing: 1px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
 
     <h1>Just Dance Universe</h1>
 
-    <!-- SCREEN 1: DANCER CARD CREATION -->
+    <!-- PROFILE PANEL -->
     <div id="setupScreen" class="card">
-        <h3 style="color: #00f0ff; margin-top:0;">CREATE DANCER CARD</h3>
-        <input type="text" id="nicknameInput" placeholder="ENTER NICKNAME" maxlength="12">
+        <p style="color: rgba(255,255,255,0.6); margin-top: 0; font-size: 14px; font-weight: 600; letter-spacing: 1px;">PROFILE CREATION</p>
+        <input type="text" id="nicknameInput" placeholder="NICKNAME" maxlength="12">
         
-        <p style="font-size: 14px; color: #aaa;">CHOOSE AVATAR</p>
+        <p style="font-size: 12px; color: rgba(255,255,255,0.4); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 15px;">Select Avatar Color</p>
         <div class="avatar-grid">
-            <!-- Placeholders for avatars. In production, use real image URLs -->
-            <div class="avatar selected" data-id="1" style="background: #ff0077;"></div>
-            <div class="avatar" data-id="2" style="background: #00f0ff;"></div>
-            <div class="avatar" data-id="3" style="background: #ffaa00;"></div>
+            <!-- Sleek color blocks passing distinct values back into your Godot engine code -->
+            <div class="avatar selected" data-id="pink" style="background: #ff0077;"></div>
+            <div class="avatar" data-id="cyan" style="background: #00f0ff;"></div>
+            <div class="avatar" data-id="yellow" style="background: #ffaa00;"></div>
         </div>
         
-        <button id="saveBtn">DANCE!</button>
+        <button id="saveBtn">Confirm</button>
     </div>
 
-    <!-- SCREEN 2: ACTIVE GAMEPLAY CONTROLLER -->
-    <div id="gameScreen" class="card" style="border-color: #ff0077; box-shadow: 0 0 15px rgba(255, 0, 119, 0.3);">
-        <p id="controllerCardName" style="font-size: 24px; color: #ff0077; margin: 0 0 10px 0;"></p>
-        <p>Hold phone firmly in your <b>RIGHT HAND</b> and follow the coach!</p>
-        <p id="status">Connecting to PC...</p>
+    <!-- IN-GAME TRACKING DEVICE MODE -->
+    <div id="gameScreen" class="card" style="border-color: rgba(255, 255, 255, 0.15);">
+        <p id="controllerCardName" style="font-size: 26px; font-weight: 800; color: #ffffff; margin: 0 0 5px 0; letter-spacing: 1px;"></p>
+        <p style="font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.4; margin-bottom: 25px;">Hold the device securely in your <b>RIGHT HAND</b> and follow the coach!</p>
+        <div id="status" class="status-badge">Connecting...</div>
     </div>
 
     <script>
         let webSocket;
-        let selectedAvatar = "1";
+        let selectedAvatar = "pink";
         const urlParams = new URLSearchParams(window.location.search);
         const pcIP = urlParams.get('ip');
 
-        // Handle Avatar Selection Graphics
         document.querySelectorAll('.avatar').forEach(avatar => {
             avatar.addEventListener('click', () => {
                 document.querySelectorAll('.avatar').forEach(a => a.classList.remove('selected'));
@@ -60,10 +157,9 @@
             });
         });
 
-        // Check if a Dancer Card already exists in phone memory
         if (localStorage.getItem('jd_nickname')) {
             document.getElementById('nicknameInput').value = localStorage.getItem('jd_nickname');
-            selectedAvatar = localStorage.getItem('jd_avatar') || "1";
+            selectedAvatar = localStorage.getItem('jd_avatar') || "pink";
             document.querySelectorAll('.avatar').forEach(a => {
                 if(a.dataset.id === selectedAvatar) a.classList.add('selected');
                 else a.classList.remove('selected');
@@ -72,23 +168,19 @@
 
         document.getElementById('saveBtn').addEventListener('click', async () => {
             const nickname = document.getElementById('nicknameInput').value.trim().toUpperCase();
-            if (!nickname) { alert("Please enter a nickname!"); return; }
+            if (!nickname) return;
 
-            // Save details locally so they don't have to re-enter them next time
             localStorage.setItem('jd_nickname', nickname);
             localStorage.setItem('jd_avatar', selectedAvatar);
 
-            // Swap UI Screens
             document.getElementById('setupScreen').style.display = 'none';
             document.getElementById('gameScreen').style.display = 'block';
             document.getElementById('controllerCardName').innerText = nickname;
 
-            // Request phone hardware motion permissions
             if (typeof DeviceMotionEvent.requestPermission === 'function') {
-                try { await DeviceMotionEvent.requestPermission(); } catch(e) { console.log(e); }
+                try { await DeviceMotionEvent.requestPermission(); } catch(e) { console.error(e); }
             }
 
-            // Connect to Godot Game
             connectToGame(nickname, selectedAvatar);
         });
 
@@ -96,34 +188,33 @@
             webSocket = new WebSocket(`ws://${pcIP}:8080`);
 
             webSocket.onopen = () => {
-                document.getElementById('status').innerText = "CONNECTED!";
-                document.getElementById('status').style.color = "#00ff88";
+                const statusBadge = document.getElementById('status');
+                statusBadge.innerText = "Connected";
+                statusBadge.style.background = "rgba(0, 240, 255, 0.15)";
+                statusBadge.style.color = "#00f0ff";
                 
-                // FIRST PACKET: Tell Godot who is logging in!
-                let loginPacket = {
+                webSocket.send(JSON.stringify({
                     type: "login",
                     nickname: name,
                     avatar: avatar
-                };
-                webSocket.send(JSON.stringify(loginPacket));
+                }));
             };
 
             webSocket.onclose = () => {
-                document.getElementById('status').innerText = "DISCONNECTED";
-                document.getElementById('status').style.color = "#ff0077";
+                const statusBadge = document.getElementById('status');
+                statusBadge.innerText = "Disconnected";
+                statusBadge.style.background = "rgba(255, 0, 119, 0.2)";
+                statusBadge.style.color = "#ff0077";
             };
 
-            // Stream continuous motion tracking packets
             window.addEventListener('devicemotion', (event) => {
                 if (!webSocket || webSocket.readyState !== WebSocket.OPEN) return;
-                
-                let motionPacket = {
+                webSocket.send(JSON.stringify({
                     type: "motion",
                     x: event.accelerationIncludingGravity.x,
                     y: event.accelerationIncludingGravity.y,
                     z: event.accelerationIncludingGravity.z
-                };
-                webSocket.send(JSON.stringify(motionPacket));
+                }));
             });
         }
     </script>
